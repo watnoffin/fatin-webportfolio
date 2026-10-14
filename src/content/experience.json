@@ -9,9 +9,9 @@
     "current": true,
     "highlights": [
       "Works with an internal Data Engineering Toolkit and Data Contract Framework built on the Open Data Contract Standard (ODCS v3.0.2) on Databricks with dbt — contracts cover schema, ownership, quality rules, and SCD behaviour and are enforced at build time.",
-      "Prepared an internal presentation introducing data contracts, the toolkit's four modules, and dbt as the enforcement layer.",
-      "Manages vulnerability remediation on a production BI server running IBM IIDR and Netezza connectivity — coordinating Nessus findings, OpenSSL-related client upgrades, IBM support, and audit documentation.",
-      "Built Qlik dashboards covering delivery time, agent performance, and traffic effects; trained and tested ML models to predict delivery time; automated recurring reports."
+      "Manage security vulnerability remediation for production data and systems, including reviewing scan findings, planning upgrades, coordinating with clients, and keeping records for audit.",
+      "Built Qlik dashboards covering delivery time, agent performance, and traffic effects; trained and tested ML models to predict delivery time; automated recurring reports.",
+      "Built and tested machine learning models to predict delivery time, and automated recurring reports and data tasks."
     ]
   },
   {

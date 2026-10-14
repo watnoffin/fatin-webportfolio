@@ -4,22 +4,25 @@
     "skills": [
       "Databricks",
       "dbt",
-      "SQL (Oracle SQL, MySQL, PL/SQL)",
-      "Data Contracts (ODCS v3.0.2)",
-      "IBM IIDR",
-      "IBM Netezza (NPS)",
-      "Linux (RHEL)"
+      "Azure Data Factory",
+      "SQL (Oracle SQL, MySQL, SQL)",
+      "Data Contracts (ODCS)",
+      "Linux (RHEL)", 
+      "Talend Studio"
     ]
   },
   {
     "category": "Analytics & BI",
     "skills": [
-      "Qlik",
+      "Qlik Sense",
       "Tableau",
       "Power BI",
       "Excel",
       "Python (Pandas, NumPy)",
-      "RStudio"
+      "RStudio", 
+      "Dataiku",
+      "Tkinter", 
+      "Ataccama"
     ]
   },
   {
@@ -28,7 +31,9 @@
       "Model training & evaluation",
       "IBM watsonx.ai",
       "Gemini API",
-      "AWS"
+      "AWS", 
+      "IBM Bob", 
+      "Databricks AI/ML"
     ]
   },
   {
@@ -46,10 +51,7 @@
   {
     "category": "Practices",
     "skills": [
-      "Git / GitHub",
-      "Nessus scan analysis",
-      "Technical documentation",
-      "Vendor & cross-team coordination"
+      "Git / GitHub"
     ]
   }
 ]
