@@ -1,0 +1,55 @@
+[
+  {
+    "category": "Data Engineering",
+    "skills": [
+      "Databricks",
+      "dbt",
+      "SQL (Oracle SQL, MySQL, PL/SQL)",
+      "Data Contracts (ODCS v3.0.2)",
+      "IBM IIDR",
+      "IBM Netezza (NPS)",
+      "Linux (RHEL)"
+    ]
+  },
+  {
+    "category": "Analytics & BI",
+    "skills": [
+      "Qlik",
+      "Tableau",
+      "Power BI",
+      "Excel",
+      "Python (Pandas, NumPy)",
+      "RStudio"
+    ]
+  },
+  {
+    "category": "AI / ML & Cloud",
+    "skills": [
+      "Model training & evaluation",
+      "IBM watsonx.ai",
+      "Gemini API",
+      "AWS"
+    ]
+  },
+  {
+    "category": "Programming",
+    "skills": [
+      "Python",
+      "SQL",
+      "R",
+      "Java",
+      "C++",
+      "PHP",
+      "HTML"
+    ]
+  },
+  {
+    "category": "Practices",
+    "skills": [
+      "Git / GitHub",
+      "Nessus scan analysis",
+      "Technical documentation",
+      "Vendor & cross-team coordination"
+    ]
+  }
+]

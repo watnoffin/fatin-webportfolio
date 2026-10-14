@@ -1,0 +1,39 @@
+---
+import skills from '../../content/skills.json';
+---
+
+<section id="skills" class="py-24 bg-white dark:bg-[#0f0f14]" aria-labelledby="skills-heading">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16" data-animate>
+      <p class="text-sm font-semibold tracking-widest text-violet-600 dark:text-violet-400 uppercase mb-3">
+        Technical
+      </p>
+      <h2 id="skills-heading" class="font-display text-4xl font-bold text-gray-900 dark:text-gray-50">
+        Skills
+      </h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {skills.map((group, i) => (
+        <div
+          class="bg-gray-50 dark:bg-[#1e1e2a] rounded-2xl border border-gray-100 dark:border-gray-800 p-6"
+          data-animate
+          style={`transition-delay: ${i * 60}ms`}
+        >
+          <h3 class="font-display text-sm font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400 mb-4">
+            {group.category}
+          </h3>
+          <ul class="flex flex-wrap gap-2" role="list">
+            {group.skills.map((skill) => (
+              <li>
+                <span class="px-3 py-1.5 bg-white dark:bg-[#0f0f14] text-gray-700 dark:text-gray-300 text-sm font-medium rounded-lg border border-gray-200 dark:border-gray-700 hover:border-violet-300 dark:hover:border-violet-700 transition-colors">
+                  {skill}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

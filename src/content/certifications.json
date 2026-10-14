@@ -1,0 +1,32 @@
+[
+  {
+    "name": "AWS Certified Cloud Practitioner",
+    "issuer": "Amazon Web Services",
+    "date": "August 2025",
+    "icon": "aws"
+  },
+  {
+    "name": "IBM watsonx.ai Technical Essentials",
+    "issuer": "IBM",
+    "date": "October 2024",
+    "icon": "ibm"
+  },
+  {
+    "name": "Intelligent Virtual Agents with IBM watsonx Assistant",
+    "issuer": "IBM",
+    "date": "October 2024",
+    "icon": "ibm"
+  },
+  {
+    "name": "Enterprise Design Thinking Practitioner",
+    "issuer": "IBM",
+    "date": "October 2024",
+    "icon": "ibm"
+  },
+  {
+    "name": "Oracle SQL Fundamentals",
+    "issuer": "Oracle",
+    "date": "March 2023",
+    "icon": "oracle"
+  }
+]

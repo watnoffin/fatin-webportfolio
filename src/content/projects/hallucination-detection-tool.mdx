@@ -1,0 +1,86 @@
+---
+slug: "hallucination-detection-tool"
+title: "Hallucination Detection Tool"
+summary: "A Databricks App with a Streamlit review UI and a data ingestion notebook to detect and track LLM hallucinations — making AI evaluation systematic and auditable."
+tags: ["Databricks", "Streamlit", "Python", "LLM Evaluation", "Data Engineering"]
+type: "personal"
+featured: true
+order: 2
+github: "https://github.com/watnoffin/hallucination-detection-tool"
+---
+
+## The Problem
+
+Large language models (LLMs) hallucinate — they generate plausible-sounding but factually incorrect outputs. Without a systematic review process, hallucinations in production AI applications are discovered by users, not engineers. This project provides a structured ingestion and review pipeline to catch them early.
+
+## My Role
+
+Sole developer. Designed and built the full pipeline: data ingestion notebook, review UI, and the Databricks App deployment configuration.
+
+## Tools & Technologies
+
+`Databricks` · `Streamlit` · `Python` · `Delta Lake` · `Notebooks`
+
+## Architecture & Data Flow
+
+```
+ ┌──────────────────────────────────────────────────────────────┐
+ │  DATA INGESTION                                              │
+ │                                                              │
+ │  Source (LLM outputs)                                        │
+ │       │                                                      │
+ │       ▼                                                      │
+ │  Ingestion Notebook                                          │
+ │  • Normalises prompt / response / expected answer            │
+ │  • Assigns review_status = "pending"                         │
+ │  • Writes to Delta table (hallucinations_raw)                │
+ └──────────────────────────┬───────────────────────────────────┘
+                            │
+ ┌──────────────────────────▼───────────────────────────────────┐
+ │  REVIEW LAYER (Streamlit UI on Databricks Apps)              │
+ │                                                              │
+ │  Reviewer sees: prompt · model response · expected answer    │
+ │                                                              │
+ │  Actions:  [✓ Correct]  [✗ Hallucination]  [? Unclear]       │
+ │                                                              │
+ │  Review written back to Delta with:                          │
+ │  reviewer_id · decision · timestamp · notes                  │
+ └──────────────────────────┬───────────────────────────────────┘
+                            │
+ ┌──────────────────────────▼───────────────────────────────────┐
+ │  METRICS TABLE                                               │
+ │  Hallucination rate by model · date · topic                  │
+ │  Ready for downstream dashboards or alerts                   │
+ └──────────────────────────────────────────────────────────────┘
+```
+
+## Approach
+
+### Ingestion Notebook
+
+The ingestion notebook handles the extract-and-load step:
+- Reads LLM output records (prompt, generated response, ground-truth answer).
+- Applies a lightweight normalisation schema so that records from different models are comparable.
+- Writes to a Delta table partitioned by date and model identifier.
+
+### Streamlit Review UI
+
+The review interface is intentionally minimal to reduce reviewer fatigue:
+- Presents one record at a time: prompt on the left, model response on the right, expected answer below.
+- Three-button classification: **Correct**, **Hallucination**, **Unclear**.
+- Optional free-text notes field for borderline cases.
+- Progress indicator showing remaining unreviewed records.
+
+### Databricks App Deployment
+
+The app runs natively on Databricks Apps, which means:
+- No separate infrastructure to manage — compute, auth, and storage are all within the same Databricks workspace.
+- The Streamlit app reads and writes directly to Delta tables using the Databricks SDK.
+
+## Outcome
+
+A repeatable, auditable pipeline for LLM quality evaluation — shifting hallucination discovery from reactive user reports to a structured reviewer workflow with a queryable audit trail.
+
+## Links
+
+- **GitHub:** [github.com/watnoffin/hallucination-detection-tool](https://github.com/watnoffin/hallucination-detection-tool)

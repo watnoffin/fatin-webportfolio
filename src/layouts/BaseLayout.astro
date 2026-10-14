@@ -1,0 +1,105 @@
+---
+import '../styles/global.css';
+import site from '../content/site.json';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  canonicalURL?: string;
+}
+
+const {
+  title = site.preferredName + ' — ' + site.title,
+  description = site.seo.description,
+  ogImage = site.seo.ogImage,
+  canonicalURL = Astro.url.href,
+} = Astro.props;
+
+const fullTitle = title.includes(site.preferredName) ? title : `${title} | ${site.preferredName}`;
+const base = import.meta.env.BASE_URL;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#7c3aed" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f0f14" media="(prefers-color-scheme: dark)" />
+
+    <!-- Primary Meta -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" href={`${base}favicon.svg`} type="image/svg+xml" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta property="og:site_name" content={site.preferredName + ' — Portfolio'} />
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(ogImage, Astro.site).href} />
+
+    <!-- JSON-LD Person structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": site.name,
+      "alternateName": site.preferredName,
+      "jobTitle": site.title,
+      "worksFor": { "@type": "Organization", "name": site.company },
+      "url": Astro.site?.href,
+      "email": site.email,
+      "sameAs": [site.linkedin, site.github],
+      "address": { "@type": "PostalAddress", "addressLocality": "Seremban", "addressRegion": "Negeri Sembilan", "addressCountry": "MY" }
+    })} />
+
+    <!-- Fonts — self-host subset via Google Fonts CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Dark mode — runs before paint to avoid FOUC -->
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (stored === 'dark' || (!stored && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-white dark:bg-[#0f0f14] text-gray-900 dark:text-gray-100 antialiased">
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <slot />
+
+    <!-- Intersection Observer for scroll animations -->
+    <script>
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      document.querySelectorAll('[data-animate]').forEach((el) => observer.observe(el));
+    </script>
+  </body>
+</html>

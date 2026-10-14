@@ -1,0 +1,14 @@
+[
+  {
+    "degree": "B.Info. Systems (Hons) — Intelligent Systems Engineering",
+    "institution": "Universiti Teknologi MARA (UiTM) Shah Alam",
+    "cgpa": "3.60",
+    "honours": ["Dean's List — Semesters 3, 4, 5"]
+  },
+  {
+    "degree": "Diploma in Computer Science (First Class Honours)",
+    "institution": "Universiti Teknologi MARA (UiTM) Jasin",
+    "cgpa": "3.85",
+    "honours": ["Hong Leong Foundation Scholarship"]
+  }
+]

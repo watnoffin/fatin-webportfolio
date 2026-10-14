@@ -1,0 +1,30 @@
+[
+  {
+    "id": "butter-idea",
+    "role": "Data Engineer",
+    "company": "Butter Idea Sdn Bhd",
+    "location": "Malaysia",
+    "startDate": "August 2025",
+    "endDate": null,
+    "current": true,
+    "highlights": [
+      "Works with an internal Data Engineering Toolkit and Data Contract Framework built on the Open Data Contract Standard (ODCS v3.0.2) on Databricks with dbt — contracts cover schema, ownership, quality rules, and SCD behaviour and are enforced at build time.",
+      "Prepared an internal presentation introducing data contracts, the toolkit's four modules, and dbt as the enforcement layer.",
+      "Manages vulnerability remediation on a production BI server running IBM IIDR and Netezza connectivity — coordinating Nessus findings, OpenSSL-related client upgrades, IBM support, and audit documentation.",
+      "Built Qlik dashboards covering delivery time, agent performance, and traffic effects; trained and tested ML models to predict delivery time; automated recurring reports."
+    ]
+  },
+  {
+    "id": "strateq",
+    "role": "Data Analytics Trainee",
+    "company": "Strateq Group",
+    "location": "Malaysia",
+    "startDate": "March 2025",
+    "endDate": "July 2025",
+    "current": false,
+    "highlights": [
+      "Supported migration of Tableau Server to an Active Directory-integrated Tableau Server environment.",
+      "Performed user access validation, data integrity checks, and dashboard migration across the platform."
+    ]
+  }
+]

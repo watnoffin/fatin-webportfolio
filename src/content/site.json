@@ -1,0 +1,17 @@
+{
+  "name": "Nurul Fatin Amira Binti Mohd Riza",
+  "preferredName": "Fatin",
+  "title": "Data Engineer",
+  "company": "Butter Idea Sdn Bhd",
+  "location": "Seremban, Negeri Sembilan, Malaysia",
+  "email": "nurulftinamirawork@gmail.com",
+  "linkedin": "https://linkedin.com/in/nurulfatinamira",
+  "github": "https://github.com/watnoffin",
+  "tagline": "Building reliable data pipelines — from contract to insight.",
+  "bio": "I'm a Data Engineer working across modern and enterprise data platforms: Databricks and dbt for contract-driven transformation, IBM IIDR and Netezza for replication and warehousing, and Qlik, Tableau, and Power BI for delivery. My background in Intelligent Systems Engineering gives me a hands-on foundation in machine learning — I build data products that are correct, traceable, and useful.",
+  "cvPath": "/portfolio-web/cv.pdf",
+  "seo": {
+    "description": "Data Engineer specialising in Databricks, dbt, data contracts (ODCS), IBM IIDR, Netezza, and BI tooling (Qlik, Tableau, Power BI). Based in Seremban, Malaysia.",
+    "ogImage": "/portfolio-web/og-image.png"
+  }
+}

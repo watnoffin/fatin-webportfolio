@@ -1,0 +1,515 @@
+---
+import PageLayout from '../../layouts/PageLayout.astro';
+
+// Static route generation for all 4 projects
+export async function getStaticPaths() {
+  const projects = [
+    {
+      slug: 'data-contract-framework',
+      title: 'Data Contract Framework & Data Engineering Toolkit',
+      description: 'A contract-driven data engineering system built on ODCS v3.0.2, Databricks, and dbt — where every dataset is governed by a machine-readable contract enforced at build time.',
+      tags: ['ODCS v3.0.2', 'Databricks', 'dbt', 'Data Contracts', 'SQL', 'YAML'],
+      type: 'work',
+      github: null,
+      award: null,
+    },
+    {
+      slug: 'hallucination-detection-tool',
+      title: 'Hallucination Detection Tool',
+      description: 'A Databricks App with a Streamlit review UI and a data ingestion notebook to detect and track LLM hallucinations — making AI evaluation systematic and auditable.',
+      tags: ['Databricks', 'Streamlit', 'Python', 'Delta Lake', 'LLM Evaluation'],
+      type: 'personal',
+      github: 'https://github.com/watnoffin/hallucination-detection-tool',
+      award: null,
+    },
+    {
+      slug: 'inspectron',
+      title: 'INSPECTRON — AI Home Inspection Generator',
+      description: 'Champion project at Bridgehack to Industry (UiTM × IBM, 2024). Detects structural defects from photos using Gemini API and generates inspection reports via IBM watsonx.ai.',
+      tags: ['IBM watsonx.ai', 'Gemini API', 'Python', 'Computer Vision', 'Prompt Engineering'],
+      type: 'personal',
+      github: null,
+      award: 'Champion — Bridgehack to Industry (UiTM × IBM, 2024)',
+    },
+    {
+      slug: 'gradtrack',
+      title: 'GradTrack — Graduate Employment Analytics',
+      description: 'Final Year Project: survey collection to Power BI dashboards, statistical analysis of satisfaction metrics, and predictive modelling in Python.',
+      tags: ['Power BI', 'Python', 'Pandas', 'NumPy', 'Statistical Analysis'],
+      type: 'personal',
+      github: null,
+      award: null,
+    },
+  ];
+  return projects.map((p) => ({ params: { slug: p.slug }, props: p }));
+}
+
+const { slug, title, description, tags, type, github, award } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+// ── Inline content per project ──────────────────────────────────────────────
+
+type Diagram = { lines: string[] };
+type Section = { heading: string; body: string[]; listItems?: string[]; diagram?: Diagram };
+
+interface ProjectContent {
+  problem: string;
+  role: string;
+  approach: Section[];
+  outcome: string;
+  confidentialNote?: string;
+}
+
+const contents: Record<string, ProjectContent> = {
+  'data-contract-framework': {
+    problem:
+      'Modern data teams share datasets without formal agreements on schema, ownership, quality rules, or change processes. The result is silent breakages, undefined SLAs, and engineers discovering failures only when a downstream dashboard stops loading. A data contract makes those agreements explicit, machine-readable, and enforced at build time.',
+    role:
+      'Contributed to the design and implementation of the internal Data Engineering Toolkit and its Data Contract Framework. Authored contract templates (Excel-to-YAML) covering schema definitions, ownership metadata, quality rules, and SCD behaviour. Prepared an internal presentation introducing data contracts, the toolkit\'s four modules, and dbt as the enforcement layer.',
+    approach: [
+      {
+        heading: 'Three-Layer Architecture',
+        body: [
+          'The system is organised in three conceptual layers: the contract artifact, the toolkit framework, and the dbt enforcement engine. Each layer has a single responsibility.',
+        ],
+      },
+      {
+        heading: 'Contract Anatomy (ODCS v3.0.2)',
+        body: [
+          'Each contract is an ODCS-compliant YAML file that covers schema (column names, types, nullability), ownership (domain, team, steward), quality (freshness SLAs, row-count thresholds, uniqueness rules), and SCD type with tracked columns and effective date logic.',
+        ],
+      },
+      {
+        heading: 'The Four Toolkit Modules',
+        body: [],
+        listItems: [
+          'Template Generator — converts an Excel spec into a valid ODCS YAML file.',
+          'Validator — parses YAML against the ODCS schema and custom business rules before any model runs.',
+          'Lineage Registry — records contract-to-model relationships so impact analysis is automatic.',
+          'Enforcement Bridge — translates contract quality rules into dbt test blocks, keeping tests in sync with the contract.',
+        ],
+      },
+      {
+        heading: 'dbt as the Enforcement Engine',
+        body: [
+          'At build time, schema mismatches fail the run immediately. Quality assertions (freshness, uniqueness, custom SQL tests) are generated from the contract, not written by hand. SCD models are generated with the correct strategy derived from the contract\'s SCD block. The contract is the single source of truth.',
+        ],
+      },
+    ],
+    outcome:
+      'The framework established a repeatable, auditable pattern for data governance — shifting quality enforcement from reactive debugging to proactive contract validation at build time.',
+    confidentialNote:
+      'Details generalised to respect confidentiality. No internal server names, hostnames, tool configurations, or document names are included.',
+  },
+  'hallucination-detection-tool': {
+    problem:
+      'Large language models hallucinate — generating plausible-sounding but factually incorrect outputs. Without a systematic review process, hallucinations in production AI applications are discovered by users, not engineers. This project provides a structured ingestion and review pipeline to catch them early.',
+    role:
+      'Sole developer. Designed and built the full pipeline: data ingestion notebook, review UI, and the Databricks App deployment configuration.',
+    approach: [
+      {
+        heading: 'Ingestion Notebook',
+        body: [
+          'Reads LLM output records (prompt, generated response, ground-truth answer). Applies a lightweight normalisation schema so that records from different models are comparable. Writes to a Delta table partitioned by date and model identifier with review_status = "pending".',
+        ],
+      },
+      {
+        heading: 'Streamlit Review UI',
+        body: [
+          'Presents one record at a time: prompt on the left, model response on the right, expected answer below. Three-button classification: Correct, Hallucination, Unclear. Optional free-text notes for borderline cases. Progress indicator showing remaining unreviewed records.',
+        ],
+      },
+      {
+        heading: 'Databricks App Deployment',
+        body: [
+          'The app runs natively on Databricks Apps — no separate infrastructure to manage. Compute, auth, and storage are all within the same Databricks workspace. The Streamlit app reads and writes directly to Delta tables using the Databricks SDK.',
+        ],
+      },
+    ],
+    outcome:
+      'A repeatable, auditable pipeline for LLM quality evaluation — shifting hallucination discovery from reactive user reports to a structured reviewer workflow with a queryable audit trail.',
+  },
+  inspectron: {
+    problem:
+      'Home inspections are time-consuming, expensive, and dependent on the availability of qualified inspectors. Property buyers and landlords often defer them, and when defects go undetected, small problems compound into costly repairs. INSPECTRON makes a first-pass inspection accessible from a smartphone photo.',
+    role:
+      'Team member (Champion team). Contributed to defect detection pipeline design, API integration with Gemini and IBM watsonx.ai, and report generation logic.',
+    approach: [
+      {
+        heading: 'Defect Detection with Gemini API',
+        body: [
+          'Gemini\'s vision capability receives a structured prompt instructing it to identify specific defect categories (cracks, mold, water damage, structural anomalies) and return a JSON list of findings with location descriptions. Structured output feeds directly into the next stage without manual parsing.',
+        ],
+      },
+      {
+        heading: 'Severity Classification',
+        body: [
+          'A deterministic mapping layer converts Gemini\'s defect type labels into severity levels (Low → Critical), ensuring consistent classification independent of LLM variability.',
+        ],
+      },
+      {
+        heading: 'Report Generation with IBM watsonx.ai',
+        body: [
+          'IBM watsonx.ai receives the structured defect list and generates a professional-tone inspection report: an executive summary of overall property condition, a per-defect section with severity and recommended repair action, and a priority list for urgent attention.',
+        ],
+      },
+    ],
+    outcome:
+      'Champion at Bridgehack to Industry (UiTM × IBM, September–October 2024). The prototype demonstrated that a two-API pipeline (vision + language model) could produce inspection reports comparable in structure and depth to a professional report, from a single photo upload.',
+  },
+  gradtrack: {
+    problem:
+      'University career offices and programme directors lack a systematic, data-driven view of how graduates are faring in the job market — and whether satisfaction with their degree correlates with employment outcomes. GradTrack provides that view.',
+    role:
+      'Sole researcher and developer for my Final Year Project. Designed the survey instrument, collected and cleaned the data, built the analytical pipeline, and delivered the Power BI dashboard.',
+    approach: [
+      {
+        heading: 'Survey Design & Collection',
+        body: [
+          'The survey captured both factual employment data (status, time-to-first-job, sector) and satisfaction metrics across curriculum relevance, career support, and overall experience — enabling correlation analysis between programme quality perceptions and outcomes.',
+        ],
+      },
+      {
+        heading: 'Cleaning & Preparation (Python / Pandas)',
+        body: [
+          'Standardised free-text categorical entries, applied median imputation for numeric fields with low missingness, and flagged records with excessive missing data for exclusion. Derived a composite satisfaction score from Likert-scale responses.',
+        ],
+      },
+      {
+        heading: 'Statistical Analysis',
+        body: [
+          'Correlation analysis identified which satisfaction dimensions most strongly associate with employment outcomes. Group comparisons tested whether differences across programmes were statistically significant.',
+        ],
+      },
+      {
+        heading: 'Predictive Modelling',
+        body: [
+          'A binary classification model (employed vs. not employed within six months) was trained on GPA, satisfaction scores, and field-of-study features. Feature importance analysis surfaced the most predictive inputs.',
+        ],
+      },
+      {
+        heading: 'Power BI Dashboard',
+        body: [
+          'The final deliverable is an interactive Power BI report allowing programme directors to drill into employment rates, satisfaction breakdowns, and predictive scores by cohort — turning analysis into an actionable planning tool.',
+        ],
+      },
+    ],
+    outcome:
+      'Delivered a complete, end-to-end analytics pipeline from raw survey data to an interactive dashboard and predictive model — demonstrating the full data engineering and analytics lifecycle as a Final Year Project.',
+  },
+};
+
+const content = contents[slug];
+
+// ── SVG pipeline diagrams ────────────────────────────────────────────────────
+// Defined as raw strings (safe, no user input)
+const diagrams: Record<string, string> = {
+  'data-contract-framework': `
+<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Three-layer Data Contract Framework architecture diagram" class="w-full max-w-2xl mx-auto">
+  <defs>
+    <marker id="arr1" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+  <!-- Layer 1 -->
+  <rect x="40" y="20" width="620" height="90" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="60" y="50" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#6d28d9">LAYER 1 — CONTRACT ARTIFACT</text>
+  <text x="60" y="72" font-family="Inter,sans-serif" font-size="12" fill="#4b5563">ODCS v3.0.2 YAML contract</text>
+  <text x="60" y="92" font-family="Inter,sans-serif" font-size="11" fill="#6b7280">Schema · Ownership · Quality rules · SCD behaviour</text>
+  <text x="560" y="72" font-family="Inter,sans-serif" font-size="11" fill="#7c3aed" text-anchor="middle">Contract Artifact</text>
+  <!-- Arrow 1→2 -->
+  <line x1="350" y1="110" x2="350" y2="140" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr1)"/>
+  <text x="360" y="130" font-family="Inter,sans-serif" font-size="10" fill="#9ca3af">parsed by</text>
+  <!-- Layer 2 -->
+  <rect x="40" y="140" width="620" height="90" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="60" y="170" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#6d28d9">LAYER 2 — TOOLKIT FRAMEWORK</text>
+  <text x="60" y="192" font-family="Inter,sans-serif" font-size="12" fill="#4b5563">Data Engineering Toolkit (4 modules)</text>
+  <text x="60" y="212" font-family="Inter,sans-serif" font-size="11" fill="#6b7280">Template Generator · Validator · Lineage Registry · Enforcement Bridge</text>
+  <!-- Arrow 2→3 -->
+  <line x1="350" y1="230" x2="350" y2="260" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr1)"/>
+  <text x="360" y="250" font-family="Inter,sans-serif" font-size="10" fill="#9ca3af">enforced via</text>
+  <!-- Layer 3 -->
+  <rect x="40" y="260" width="620" height="90" rx="12" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="60" y="290" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#6d28d9">LAYER 3 — ENFORCEMENT ENGINE</text>
+  <text x="60" y="312" font-family="Inter,sans-serif" font-size="12" fill="#4b5563">dbt on Databricks</text>
+  <text x="60" y="332" font-family="Inter,sans-serif" font-size="11" fill="#6b7280">Schema tests · Freshness assertions · Contract-driven SCD models</text>
+</svg>`,
+
+  'hallucination-detection-tool': `
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hallucination detection pipeline data flow diagram" class="w-full max-w-2xl mx-auto">
+  <defs>
+    <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+  <!-- Source -->
+  <rect x="200" y="20" width="300" height="60" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="350" y="46" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#6d28d9">LLM Output Source</text>
+  <text x="350" y="65" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#6b7280">Prompt · Response · Expected Answer</text>
+  <!-- Arrow -->
+  <line x1="350" y1="80" x2="350" y2="115" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr2)"/>
+  <!-- Ingestion -->
+  <rect x="100" y="115" width="500" height="80" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="350" y="143" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#6d28d9">Ingestion Notebook</text>
+  <text x="350" y="163" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4b5563">Normalise · Assign review_status="pending" · Write Delta table</text>
+  <text x="350" y="183" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6b7280">Partitioned by date &amp; model identifier</text>
+  <!-- Arrow -->
+  <line x1="350" y1="195" x2="350" y2="230" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr2)"/>
+  <!-- Review UI -->
+  <rect x="100" y="230" width="500" height="90" rx="10" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="350" y="258" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#6d28d9">Streamlit Review UI (Databricks Apps)</text>
+  <text x="350" y="278" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4b5563">Prompt · Response · Expected — side by side</text>
+  <text x="350" y="298" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#6b7280">[ ✓ Correct ]  [ ✗ Hallucination ]  [ ? Unclear ]  + notes</text>
+  <!-- Arrow -->
+  <line x1="350" y1="320" x2="350" y2="355" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr2)"/>
+  <!-- Metrics -->
+  <rect x="150" y="355" width="400" height="50" rx="10" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="350" y="378" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#4c1d95">Metrics Delta Table</text>
+  <text x="350" y="396" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#6b7280">Hallucination rate by model · date · topic</text>
+</svg>`,
+
+  inspectron: `
+<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="INSPECTRON AI pipeline architecture diagram" class="w-full max-w-2xl mx-auto">
+  <defs>
+    <marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+  <!-- Input -->
+  <rect x="200" y="20" width="300" height="55" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="350" y="44" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#6d28d9">User Input</text>
+  <text x="350" y="63" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#6b7280">Upload photo(s) — walls, ceiling, floor</text>
+  <line x1="350" y1="75" x2="350" y2="105" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr3)"/>
+  <!-- Gemini -->
+  <rect x="80" y="105" width="540" height="65" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="350" y="130" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#6d28d9">Defect Detection — Gemini API (Vision)</text>
+  <text x="350" y="152" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4b5563">Cracks · Mold · Water damage · Structural issues → JSON defect list</text>
+  <line x1="350" y1="170" x2="350" y2="200" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr3)"/>
+  <!-- Severity -->
+  <rect x="160" y="200" width="380" height="55" rx="10" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="350" y="224" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#6d28d9">Severity Classification</text>
+  <text x="350" y="245" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#6b7280">Rule-based: Low / Medium / High / Critical</text>
+  <line x1="350" y1="255" x2="350" y2="285" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr3)"/>
+  <!-- watsonx -->
+  <rect x="80" y="285" width="540" height="60" rx="10" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="350" y="309" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#4c1d95">Report Generation — IBM watsonx.ai</text>
+  <text x="350" y="330" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4b5563">Executive summary · Per-defect repair actions · Priority ranking</text>
+  <line x1="350" y1="345" x2="350" y2="365" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr3)"/>
+  <!-- Output -->
+  <rect x="200" y="358" width="300" height="15" rx="5" fill="#7c3aed"/>
+  <text x="350" y="370" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" font-weight="600" fill="#fff">Downloadable Inspection Report</text>
+</svg>`,
+
+  gradtrack: `
+<svg viewBox="0 0 700 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="GradTrack data pipeline from survey to dashboard diagram" class="w-full max-w-2xl mx-auto">
+  <defs>
+    <marker id="arr4" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+  <!-- Survey -->
+  <rect x="200" y="10" width="300" height="55" rx="10" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="350" y="34" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#6d28d9">Survey Collection</text>
+  <text x="350" y="53" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#6b7280">Employment · Salary · Satisfaction scores</text>
+  <line x1="350" y1="65" x2="350" y2="95" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr4)"/>
+  <!-- Cleaning -->
+  <rect x="100" y="95" width="500" height="60" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="350" y="119" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#6d28d9">Cleaning &amp; Preparation — Python / Pandas</text>
+  <text x="350" y="143" text-anchor="middle" font-family="Inter,sans-serif" font-size="11" fill="#4b5563">Imputation · Standardisation · Composite satisfaction score</text>
+  <!-- Two branches -->
+  <line x1="240" y1="155" x2="180" y2="195" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr4)"/>
+  <line x1="460" y1="155" x2="520" y2="195" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr4)"/>
+  <!-- Stats -->
+  <rect x="50" y="195" width="250" height="70" rx="10" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="175" y="219" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="12" font-weight="700" fill="#6d28d9">Statistical Analysis</text>
+  <text x="175" y="238" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#4b5563">Correlation · Significance tests</text>
+  <text x="175" y="255" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6b7280">Likert scoring · Group comparisons</text>
+  <!-- ML -->
+  <rect x="400" y="195" width="250" height="70" rx="10" fill="#ddd6fe" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="525" y="219" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="12" font-weight="700" fill="#6d28d9">Predictive Model</text>
+  <text x="525" y="238" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#4b5563">Binary classification</text>
+  <text x="525" y="255" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#6b7280">GPA · Satisfaction · Field → Outcome</text>
+  <!-- Merge arrows -->
+  <line x1="175" y1="265" x2="280" y2="305" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr4)"/>
+  <line x1="525" y1="265" x2="420" y2="305" stroke="#7c3aed" stroke-width="2" marker-end="url(#arr4)"/>
+  <!-- Dashboard -->
+  <rect x="120" y="305" width="460" height="45" rx="10" fill="#c4b5fd" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="350" y="327" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-size="13" font-weight="700" fill="#4c1d95">Power BI Dashboard</text>
+  <text x="350" y="344" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#4b5563">Employment rate · Satisfaction · Predictive scores · Interactive slicers</text>
+</svg>`,
+};
+
+const diagram = diagrams[slug] ?? '';
+---
+
+<PageLayout title={title} description={description}>
+  <!-- Back link -->
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-4">
+    <a
+      href={`${base}`}
+      class="inline-flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
+    >
+      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+      </svg>
+      Back to portfolio
+    </a>
+  </div>
+
+  <article class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24" aria-labelledby="project-title">
+    <!-- Header -->
+    <header class="mb-12">
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <span class={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${type === 'work' ? 'bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}>
+          {type === 'work' ? 'Professional' : 'Personal Project'}
+        </span>
+        {award && (
+          <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300">
+            <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 1l2.928 5.935 6.072.883-4.394 4.283 1.036 6.041L10 15.167l-5.642 2.975 1.036-6.041L1 7.818l6.072-.883z" clip-rule="evenodd"/>
+            </svg>
+            {award}
+          </span>
+        )}
+      </div>
+      <h1 id="project-title" class="font-display text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-gray-50 leading-tight mb-6">
+        {title}
+      </h1>
+      <p class="text-xl text-gray-600 dark:text-gray-300 leading-relaxed mb-6">{description}</p>
+
+      <!-- Tags -->
+      <ul class="flex flex-wrap gap-2" role="list" aria-label="Technologies used">
+        {tags.map((tag) => (
+          <li>
+            <span class="px-3 py-1.5 bg-violet-50 dark:bg-violet-900/20 text-violet-700 dark:text-violet-300 text-sm font-medium rounded-lg border border-violet-100 dark:border-violet-800">
+              {tag}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      {github && (
+        <div class="mt-6">
+          <a
+            href={github}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-5 py-2.5 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-xl font-semibold text-sm hover:bg-gray-800 dark:hover:bg-white transition-colors"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/>
+            </svg>
+            View on GitHub
+          </a>
+        </div>
+      )}
+    </header>
+
+    <!-- Divider -->
+    <div class="border-t border-gray-100 dark:border-gray-800 mb-12"></div>
+
+    <!-- Content grid -->
+    <div class="space-y-16">
+
+      <!-- Problem -->
+      <section aria-labelledby="problem-heading">
+        <h2 id="problem-heading" class="font-display text-2xl font-bold text-gray-900 dark:text-gray-50 mb-4 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-violet-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0" aria-hidden="true">1</span>
+          The Problem
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">{content.problem}</p>
+      </section>
+
+      <!-- Role -->
+      <section aria-labelledby="role-heading">
+        <h2 id="role-heading" class="font-display text-2xl font-bold text-gray-900 dark:text-gray-50 mb-4 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-violet-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0" aria-hidden="true">2</span>
+          My Role
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">{content.role}</p>
+      </section>
+
+      <!-- Architecture diagram -->
+      {diagram && (
+        <section aria-labelledby="diagram-heading">
+          <h2 id="diagram-heading" class="font-display text-2xl font-bold text-gray-900 dark:text-gray-50 mb-6 flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-violet-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0" aria-hidden="true">3</span>
+            Architecture & Data Flow
+          </h2>
+          <div class="bg-gray-50 dark:bg-[#1e1e2a] rounded-2xl border border-gray-100 dark:border-gray-800 p-6 overflow-x-auto">
+            <Fragment set:html={diagram} />
+          </div>
+        </section>
+      )}
+
+      <!-- Approach -->
+      <section aria-labelledby="approach-heading">
+        <h2 id="approach-heading" class="font-display text-2xl font-bold text-gray-900 dark:text-gray-50 mb-8 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-violet-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0" aria-hidden="true">4</span>
+          Approach
+        </h2>
+        <div class="space-y-8">
+          {content.approach.map((section) => (
+            <div>
+              <h3 class="font-display text-lg font-bold text-gray-900 dark:text-gray-100 mb-3 flex items-center gap-2">
+                <span class="w-1.5 h-5 bg-violet-500 rounded-full" aria-hidden="true"></span>
+                {section.heading}
+              </h3>
+              {section.body.map((para) => (
+                <p class="text-gray-600 dark:text-gray-300 leading-relaxed mb-3">{para}</p>
+              ))}
+              {section.listItems && (
+                <ul class="space-y-2 mt-3" role="list">
+                  {section.listItems.map((item) => (
+                    <li class="flex gap-3 text-gray-600 dark:text-gray-300">
+                      <svg class="w-4 h-4 mt-1 flex-shrink-0 text-violet-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Outcome -->
+      <section aria-labelledby="outcome-heading">
+        <h2 id="outcome-heading" class="font-display text-2xl font-bold text-gray-900 dark:text-gray-50 mb-4 flex items-center gap-3">
+          <span class="w-8 h-8 rounded-lg bg-violet-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0" aria-hidden="true">5</span>
+          Outcome
+        </h2>
+        <div class="bg-violet-50 dark:bg-violet-900/10 border border-violet-200 dark:border-violet-800 rounded-xl p-6">
+          <p class="text-gray-700 dark:text-gray-300 leading-relaxed text-lg font-medium">{content.outcome}</p>
+        </div>
+        {content.confidentialNote && (
+          <p class="mt-4 text-sm text-gray-400 dark:text-gray-500 italic">{content.confidentialNote}</p>
+        )}
+      </section>
+    </div>
+
+    <!-- Navigation -->
+    <div class="mt-16 pt-8 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
+      <a
+        href={`${base}`}
+        class="inline-flex items-center gap-2 text-sm font-semibold text-violet-600 dark:text-violet-400 hover:text-violet-700 dark:hover:text-violet-300 transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        Back to portfolio
+      </a>
+      <a
+        href={`${base}#projects`}
+        class="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-colors"
+      >
+        All projects
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </a>
+    </div>
+  </article>
+</PageLayout>

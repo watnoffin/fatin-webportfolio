@@ -1,0 +1,45 @@
+---
+import site from '../../content/site.json';
+---
+
+<section id="about" class="py-24 bg-gray-50 dark:bg-[#16161e]" aria-labelledby="about-heading">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+      <!-- Text -->
+      <div data-animate>
+        <p class="text-sm font-semibold tracking-widest text-violet-600 dark:text-violet-400 uppercase mb-3">
+          About
+        </p>
+        <h2 id="about-heading" class="font-display text-4xl font-bold text-gray-900 dark:text-gray-50 mb-6">
+          Building data that teams can trust.
+        </h2>
+        <div class="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
+          <p>{site.bio}</p>
+          <p>
+            I graduated with a B.Info. Systems (Hons) in <strong class="font-semibold text-gray-900 dark:text-gray-100">Intelligent Systems Engineering</strong> from UiTM Shah Alam (Dean's List, CGPA 3.60), and a First Class Honours Diploma in Computer Science from UiTM Jasin (CGPA 3.85, Hong Leong Foundation Scholar).
+          </p>
+          <p>
+            Currently at <strong class="font-semibold text-gray-900 dark:text-gray-100">Butter Idea Sdn Bhd</strong> as a Data Engineer, where I work on a production Data Contract Framework built on ODCS v3.0.2 with Databricks and dbt, and manage enterprise data infrastructure including IBM IIDR and Netezza connectivity.
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick stats -->
+      <div data-animate class="grid grid-cols-2 gap-4">
+        {[
+          { number: '3.60', label: 'Degree CGPA', sub: "Dean's List × 3" },
+          { number: '3.85', label: 'Diploma CGPA', sub: 'First Class Honours' },
+          { number: '5+', label: 'Tools & Platforms', sub: 'Data engineering stack' },
+          { number: '4', label: 'Certifications', sub: 'AWS, IBM, Oracle' },
+        ].map((stat) => (
+          <div class="p-6 bg-white dark:bg-[#1e1e2a] rounded-2xl border border-gray-100 dark:border-gray-800">
+            <p class="font-display text-3xl font-extrabold text-violet-600 dark:text-violet-400">{stat.number}</p>
+            <p class="font-semibold text-gray-900 dark:text-gray-100 mt-1">{stat.label}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{stat.sub}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,81 @@
+---
+slug: "inspectron"
+title: "INSPECTRON — AI Home Inspection Generator"
+summary: "Champion project at Bridgehack to Industry (UiTM × IBM, Sep–Oct 2024). Detects structural defects from uploaded photos using Gemini API and generates professional inspection reports via IBM watsonx.ai."
+tags: ["IBM watsonx.ai", "Gemini API", "Python", "AI/ML", "Computer Vision"]
+type: "personal"
+featured: true
+order: 3
+award: "Champion — Bridgehack to Industry (UiTM × IBM, 2024)"
+---
+
+## The Problem
+
+Home inspections are time-consuming, expensive, and dependent on the availability of qualified inspectors. Property buyers and landlords often defer them — and when defects go undetected, small problems compound into costly repairs. INSPECTRON makes a first-pass inspection accessible from a smartphone photo.
+
+## My Role
+
+Team member (Champion team). Contributed to defect detection pipeline design, API integration with Gemini and IBM watsonx.ai, and report generation logic.
+
+## Tools & Technologies
+
+`Gemini API` · `IBM watsonx.ai` · `Python` · `Computer Vision` · `Prompt Engineering`
+
+## Architecture & Flow
+
+```
+ ┌─────────────────────────────────────────────────────────────┐
+ │  USER INPUT                                                 │
+ │  Upload photo(s) of property — walls, ceiling, floor        │
+ └──────────────────────────┬──────────────────────────────────┘
+                            │
+ ┌──────────────────────────▼──────────────────────────────────┐
+ │  DEFECT DETECTION LAYER                                     │
+ │  Gemini API (Vision)                                        │
+ │                                                             │
+ │  Detects: cracks · mold · water damage · structural issues  │
+ │  Output: defect type · location · bounding context          │
+ └──────────────────────────┬──────────────────────────────────┘
+                            │
+ ┌──────────────────────────▼──────────────────────────────────┐
+ │  SEVERITY CLASSIFICATION                                    │
+ │  Rule-based mapping: defect type → severity level           │
+ │  Low / Medium / High / Critical                             │
+ └──────────────────────────┬──────────────────────────────────┘
+                            │
+ ┌──────────────────────────▼──────────────────────────────────┐
+ │  REPORT GENERATION                                          │
+ │  IBM watsonx.ai                                             │
+ │                                                             │
+ │  Input: structured defect list + severity                   │
+ │  Output: narrative inspection report with                   │
+ │  per-defect repair recommendations and priority ranking     │
+ └──────────────────────────┬──────────────────────────────────┘
+                            │
+ ┌──────────────────────────▼──────────────────────────────────┐
+ │  OUTPUT                                                     │
+ │  Downloadable inspection report                             │
+ │  Summary card · Defect list · Recommended actions           │
+ └─────────────────────────────────────────────────────────────┘
+```
+
+## Approach
+
+### Defect Detection
+
+Gemini's vision capability is given a structured prompt instructing it to identify specific defect categories (cracks, mold, water damage, structural anomalies) and return a JSON list of findings with location descriptions. This structured output feeds directly into the next stage without manual parsing.
+
+### Severity Classification
+
+A deterministic mapping layer converts Gemini's defect type labels into severity levels (Low → Critical), ensuring consistent classification independent of LLM variability.
+
+### Report Generation with watsonx.ai
+
+IBM watsonx.ai receives the structured defect list and generates a professional-tone inspection report. The prompt is templated to produce:
+- An executive summary of overall property condition.
+- A per-defect section with severity, description, and recommended repair action.
+- A priority list for urgent attention.
+
+## Outcome
+
+Champion at **Bridgehack to Industry (UiTM × IBM, September–October 2024)**. The prototype demonstrated that a two-API pipeline (vision + language model) could produce inspection reports comparable in structure and depth to a professional report, from a single photo upload.

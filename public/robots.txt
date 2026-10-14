@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://watnoffin.github.io/portfolio-web/sitemap-index.xml

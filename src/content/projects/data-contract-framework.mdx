@@ -1,0 +1,91 @@
+---
+slug: "data-contract-framework"
+title: "Data Contract Framework & Data Engineering Toolkit"
+summary: "A contract-driven data engineering system built on ODCS v3.0.2, Databricks, and dbt — where every dataset is governed by a machine-readable contract enforced at build time."
+tags: ["ODCS", "Databricks", "dbt", "Data Contracts", "SQL"]
+type: "work"
+featured: true
+order: 1
+---
+
+## The Problem
+
+Modern data teams face a fundamental trust problem: datasets are shared across teams without formal agreements on schema, ownership, quality rules, or change processes. The result is silent breakages, undefined SLAs, and engineers discovering failures only when a downstream dashboard stops loading.
+
+A **data contract** solves this by making those agreements explicit, machine-readable, and enforced — turning an informal promise into a build-time constraint.
+
+> _Details generalised to respect confidentiality._
+
+## My Role
+
+- Contributed to the design and implementation of the internal **Data Engineering Toolkit** and its **Data Contract Framework**.
+- Authored contract templates (Excel-to-YAML) covering schema definitions, ownership metadata, quality rules, and SCD (Slowly Changing Dimension) behaviour.
+- Prepared an internal presentation introducing data contracts, the toolkit's four modules, and dbt as the enforcement layer — helping align engineering and stakeholder understanding.
+
+## Tools & Technologies
+
+`ODCS v3.0.2` · `Databricks` · `dbt` · `SQL` · `YAML` · `Excel (contract templates)`
+
+## Architecture & Approach
+
+The system is organised in three conceptual layers:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  Layer 1 — CONTRACT ARTIFACT                            │
+│  ODCS v3.0.2 YAML contract                             │
+│  Schema · Ownership · Quality rules · SCD behaviour     │
+└──────────────────────┬──────────────────────────────────┘
+                       │  parsed by
+┌──────────────────────▼──────────────────────────────────┐
+│  Layer 2 — TOOLKIT FRAMEWORK                            │
+│  Data Engineering Toolkit (4 modules)                   │
+│  Template generation · Validation · Lineage · Registry  │
+└──────────────────────┬──────────────────────────────────┘
+                       │  enforced via
+┌──────────────────────▼──────────────────────────────────┐
+│  Layer 3 — ENFORCEMENT ENGINE                           │
+│  dbt on Databricks                                      │
+│  Schema tests · Freshness · Contract assertions         │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Contract Anatomy
+
+Each contract is an ODCS-compliant YAML file that covers:
+
+| Section | What it governs |
+|---|---|
+| `schema` | Column names, types, nullability, descriptions |
+| `ownership` | Domain, team, data owner, steward |
+| `quality` | Freshness SLAs, row-count thresholds, uniqueness rules |
+| `scd` | SCD type, tracked columns, effective date logic |
+
+### The Toolkit's Four Modules
+
+1. **Template Generator** — converts an Excel contract spec into a valid ODCS YAML file, lowering the barrier for non-engineers to author contracts.
+2. **Validator** — parses the YAML against the ODCS schema and custom business rules before any model runs.
+3. **Lineage Registry** — records contract-to-model relationships so impact analysis is automatic.
+4. **Enforcement Bridge** — translates contract quality rules into dbt test blocks, ensuring tests are always in sync with the contract.
+
+### dbt as the Enforcement Engine
+
+dbt sits at the boundary between the contract and the live data. At build time:
+
+- **Schema mismatches** fail the run immediately.
+- **Quality assertions** (freshness, uniqueness, custom SQL tests) are generated from the contract — not written by hand.
+- **SCD models** are generated with the correct strategy derived from the contract's SCD block.
+
+This means the contract is the single source of truth: change the contract, and the enforcement changes automatically.
+
+## When to Use a Data Contract
+
+Data contracts add the most value when:
+- A dataset crosses team or domain boundaries (producer ≠ consumer).
+- Downstream consumers need SLA guarantees on schema stability or freshness.
+- Regulatory or audit requirements demand documented data lineage and ownership.
+- A platform is scaling and informal verbal agreements no longer suffice.
+
+## Outcome
+
+The framework established a repeatable, auditable pattern for data governance within the team — shifting quality enforcement from reactive debugging to proactive contract validation at build time.

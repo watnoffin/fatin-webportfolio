@@ -1,0 +1,86 @@
+---
+slug: "gradtrack"
+title: "GradTrack — Graduate Employment Analytics"
+summary: "Final Year Project: end-to-end pipeline from survey data collection to Power BI dashboards, statistical analysis of graduate satisfaction metrics, and predictive modelling in Python."
+tags: ["Power BI", "Python", "Statistical Analysis", "Data Visualisation", "Pandas"]
+type: "personal"
+featured: true
+order: 4
+---
+
+## The Problem
+
+University career offices and programme directors lack a systematic, data-driven view of how graduates are faring in the job market — and whether satisfaction with their degree correlates with employment outcomes. GradTrack provides that view.
+
+## My Role
+
+Sole researcher and developer for my Final Year Project. Designed the survey instrument, collected and cleaned the data, built the analytical pipeline, and delivered the Power BI dashboard.
+
+## Tools & Technologies
+
+`Python (Pandas, NumPy)` · `Power BI` · `Statistical Analysis` · `Survey Design` · `Data Cleaning`
+
+## Data Pipeline
+
+```
+ ┌────────────────────────────────────────────────────────────┐
+ │  COLLECTION                                                │
+ │  Structured survey instrument                              │
+ │  Fields: employment status · time-to-employment ·          │
+ │  salary band · satisfaction scores · programme details     │
+ └─────────────────────────────┬──────────────────────────────┘
+                               │
+ ┌─────────────────────────────▼──────────────────────────────┐
+ │  CLEANING & PREPARATION (Python / Pandas)                  │
+ │  • Handle missing values (median imputation / exclusion)   │
+ │  • Standardise categorical fields                          │
+ │  • Derive composite satisfaction score                     │
+ │  • Export cleaned CSV for Power BI and analysis            │
+ └─────────────────────────────┬──────────────────────────────┘
+                               │
+          ┌────────────────────┴────────────────────┐
+          │                                         │
+ ┌────────▼──────────────┐             ┌────────────▼──────────┐
+ │  STATISTICAL ANALYSIS │             │  PREDICTIVE MODEL     │
+ │  (Python)             │             │  (Python / sklearn)   │
+ │                       │             │                       │
+ │  Correlation matrix   │             │  Target: employment   │
+ │  Likert scale scoring │             │  outcome (binary)     │
+ │  Significance tests   │             │  Features: GPA,       │
+ │  Group comparisons    │             │  satisfaction, field  │
+ └────────┬──────────────┘             └────────────┬──────────┘
+          │                                         │
+ ┌────────▼─────────────────────────────────────────▼──────────┐
+ │  POWER BI DASHBOARD                                         │
+ │  • Employment rate by programme and cohort                  │
+ │  • Satisfaction breakdown (curriculum, support, career)     │
+ │  • Predictive score distribution                            │
+ │  • Interactive slicers: year · faculty · employment status  │
+ └─────────────────────────────────────────────────────────────┘
+```
+
+## Approach
+
+### Survey Design
+
+The survey captured both factual employment data (status, time-to-first-job, sector) and satisfaction metrics across curriculum relevance, career support, and overall experience — enabling correlation analysis between programme quality perceptions and outcomes.
+
+### Cleaning & Preparation
+
+Python and Pandas handled the full cleaning pipeline: standardising free-text categorical entries, applying median imputation for numeric fields with low missingness, and flagging records with excessive missing data for exclusion.
+
+### Statistical Analysis
+
+Satisfaction metrics were scored on a composite Likert scale. Correlation analysis identified which satisfaction dimensions most strongly associate with employment outcomes. Group comparisons tested whether differences across programmes were statistically significant.
+
+### Predictive Modelling
+
+A binary classification model (employed vs. not employed within six months) was trained on GPA, satisfaction scores, and field-of-study features. Feature importance analysis surfaced which inputs were most predictive.
+
+### Power BI Dashboard
+
+The final deliverable was an interactive Power BI report allowing programme directors to drill into employment rates, satisfaction breakdowns, and predictive scores by cohort — turning the analysis into an actionable planning tool.
+
+## Outcome
+
+Delivered a complete, end-to-end analytics pipeline from raw survey data to an interactive dashboard and predictive model — demonstrating the full data engineering and analytics lifecycle as a Final Year Project.
