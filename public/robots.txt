@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://watnoffin.github.io/portfolio-web/sitemap-index.xml
+Sitemap: https://watnoffin.github.io/fatin-webportfolio/sitemap-index.xml

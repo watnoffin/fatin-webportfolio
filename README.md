@@ -2,7 +2,7 @@
 
 Personal portfolio for **Nurul Fatin Amira Binti Mohd Riza** — Data Engineer.
 
-**Live URL:** `https://watnoffin.github.io/portfolio-web/` (after deployment)
+**Live URL:** `https://watnoffin.github.io/fatin-webportfolio/`
 
 Built with [Astro](https://astro.build/) + TypeScript + [Tailwind CSS v4](https://tailwindcss.com/), deployed as a fully static site to GitHub Pages.
 

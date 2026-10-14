@@ -7,7 +7,7 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://watnoffin.github.io',
-  base: '/portfolio-web/',
+  base: '/fatin-webportfolio/',
   integrations: [mdx(), sitemap()],
   vite: {
     plugins: [tailwindcss()],
